@@ -1,5 +1,5 @@
 # Use the PyTorch base image
-FROM runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04
+FROM runpod/pytorch:1.0.3-cu1290-torch290-ubuntu2204
 
 # Set working directory
 WORKDIR /
@@ -17,4 +17,5 @@ EXPOSE 8000
 
 # Start uvicorn with workers=1 (GPU tasks are usually compute-bound,
 # so one worker per pod is often more stable for LLMs)
+
 CMD ["python", "-u", "main.py"]
