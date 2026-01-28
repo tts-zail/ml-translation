@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 # Environment Variables
 os.environ["HF_HUB_READ_TIMEOUT"] = "300"
 os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
+os.environ['HF_HOME'] = '/workspace/huggingface'
 HF_TOKEN = os.getenv("HF_TOKEN")
 
 # Global State
@@ -131,3 +132,4 @@ if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", "8000"))
     uvicorn.run(app, host="0.0.0.0", port=port)
+
