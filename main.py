@@ -1,4 +1,9 @@
 import os
+os.makedirs('/workspace/huggingface/tmp', exist_ok=True)
+os.environ['HF_HOME'] = '/workspace/huggingface'
+os.environ['HF_HUB_CACHE'] = '/workspace/huggingface/hub'
+os.environ['TMPDIR'] = '/workspace/huggingface/tmp'
+
 import torch
 import logging
 from fastapi import FastAPI, HTTPException
@@ -12,7 +17,6 @@ logger = logging.getLogger(__name__)
 # Environment Variables
 os.environ["HF_HUB_READ_TIMEOUT"] = "300"
 os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
-os.environ['HF_HOME'] = '/workspace/huggingface'
 HF_TOKEN = os.getenv("HF_TOKEN")
 
 # Global State
@@ -132,4 +136,5 @@ if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", "8000"))
     uvicorn.run(app, host="0.0.0.0", port=port)
+
 
