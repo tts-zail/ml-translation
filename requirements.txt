@@ -3,3 +3,6 @@ transformers>=5.0.0
 accelerate>=1.12.0
 bitsandbytes
 sentencepiece
+fastapi
+uvicorn
+pydantic

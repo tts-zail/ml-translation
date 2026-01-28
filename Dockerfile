@@ -1,15 +1,20 @@
-# Use a pre-configured RunPod image
+# Use the PyTorch base image
 FROM runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04
 
 # Set working directory
 WORKDIR /
 
-# Copy requirements and install only the missing pieces
+# Copy requirements and install
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy your handler code
-COPY handler.py .
+# Copy your FastAPI application code
+# (Assuming your modified code is named main.py)
+COPY main.py .
 
-# Start the handler
-CMD [ "python", "-u", "/handler.py" ]
+# Expose the port (RunPod load balancers usually look for 8000 or 80)
+EXPOSE 8000
+
+# Start uvicorn with workers=1 (GPU tasks are usually compute-bound,
+# so one worker per pod is often more stable for LLMs)
+CMD ["python", "-u", "main.py"]
