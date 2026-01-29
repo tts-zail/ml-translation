@@ -113,7 +113,10 @@ def translate_gemma(text, source_culture, target_culture):
         },
         {
             "role": "assistant",
-            "content": str(example["output"])
+            "content": [{
+                "type": "text",
+                "text": str(example["output"])
+            }]
         },
         # Normal Request
         {
