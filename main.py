@@ -112,10 +112,12 @@ def translate_gemma(text, source_culture, target_culture):
             }]
         },
         {
-            "role": "assistant",
+            "role": "user",
             "content": [{
                 "type": "text",
-                "text": str(example["output"])
+                "text": example["output"],
+                "source_lang_code": source_culture,
+                "target_lang_code": target_culture
             }]
         },
         # Normal Request
@@ -180,6 +182,7 @@ if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", "8000"))
     uvicorn.run(app, host="0.0.0.0", port=port, workers=1)
+
 
 
 
