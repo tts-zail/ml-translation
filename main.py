@@ -24,22 +24,6 @@ MODELS = {}
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 GEMMA_MODEL = "google/translategemma-12b-it"
 
-TRANSLATION_EXAMPLES = {
-    ("de-DE", "fr-FR"): {
-        "input": "* Beim Kauf von teilnehmenden Aktionsprodukten im Aktionszeitraum 11.05.2026 - 31.07.2026 bzw. nur solange der Vorrat reicht.$Anmeldung zur Aktion möglich bis 31.08.2026 bzw. nur solange der Vorrat reicht.",
-        "output": "* A l'achat de produits éligibles pendant la durée de l'offre spéciale, du 11/05/2026 au 31/07/2026, ou dans la limite des stocks disponibles.$Inscription à l'offre spéciale possible jusqu'au 31/08/2026 ou dans la limite des stocks disponibles."
-    },
-    ("de-DE", "lt-LT"): {
-        "input": "* Beim Kauf von teilnehmenden Aktionsprodukten im Aktionszeitraum 11.05.2026 - 31.07.2026 bzw. nur solange der Vorrat reicht.$Anmeldung zur Aktion möglich bis 31.08.2026 bzw. nur solange der Vorrat reicht.",
-        "output": "* Įsigyjant dalyvaujančius reklaminius produktus akcijos laikotarpiu 2026 05 11 - 2026 07 31 arba tik iki atsargų pabaigos.$Registracija akcijoje galima iki 2026 08 31 arba tik iki atsargų pabaigos."
-    },
-    # Fallback: Englisch hilft, den professionellen "Vibe" zu setzen
-    "default": {
-        "input": "* Beim Kauf von teilnehmenden Aktionsprodukten im Aktionszeitraum 11.05.2026 - 31.07.2026 bzw. nur solange der Vorrat reicht.$Anmeldung zur Aktion möglich bis 31.08.2026 bzw. nur solange der Vorrat reicht.",
-        "output": "* When purchasing participating promotional products during the promotional period 11.05.2026 - 31.07.2026 or only while stocks last.$Registration for the promotion possible until 31.08.2026 or only while stocks last."
-    }
-}
-
 app = FastAPI(title="Translation API")
 
 # -------------------- Schemas --------------------
@@ -97,23 +81,12 @@ def translate_marian(text, model_name):
 
 def translate_gemma(text, source_culture, target_culture):
     pipe = MODELS[GEMMA_MODEL]
-    
-    example = TRANSLATION_EXAMPLES.get((source_culture, target_culture), TRANSLATION_EXAMPLES["default"])
-    
-    context = f"Learning Example: << {example['input']} >> translates to << {example['output']} >>"
-    combined_text_payload = f"""
-        [CONTEXT]: {context}
-
-        [TEXT TO TRANSLATE]:
-        {text}
-    """
-    
     messages = [
         {
             "role": "user",
             "content": [{
                 "type": "text",
-                "text": combined_text_payload,
+                "text": text,
                 "source_lang_code": source_culture,
                 "target_lang_code": target_culture
             }]
