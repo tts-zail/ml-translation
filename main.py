@@ -80,10 +80,7 @@ def translate_marian(text, model_name):
     return data["tokenizer"].batch_decode(generated_tokens, skip_special_tokens=True)[0]
 
 def translate_gemma(text, source_culture, target_culture):
-    pipe = MODELS[GEMMA_MODEL]
-    
-    example = TRANSLATION_EXAMPLES.get((source_culture, target_culture), TRANSLATION_EXAMPLES["default"])
-    
+    pipe = MODELS[GEMMA_MODEL]    
     messages = [
         {
             "role": "user",
@@ -146,6 +143,7 @@ if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", "8000"))
     uvicorn.run(app, host="0.0.0.0", port=port, workers=1)
+
 
 
 
